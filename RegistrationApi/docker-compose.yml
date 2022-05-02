@@ -1,0 +1,16 @@
+version: "3"
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=88DarkSaturn
+  app:
+    build: .
+    environment:
+      - SQL_SERVER=db
+      - SQL_USER=sa
+      - SQL_PASSWORD=88DarkSaturn
+      - DOTNET_ENVIRONMENT=Development
+    ports:
+      - "80:80"
