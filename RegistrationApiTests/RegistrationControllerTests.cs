@@ -12,11 +12,11 @@ namespace RegistrationApiTests
 {
     public class RegistrationControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
-        private readonly HttpClient _client;
+        private readonly WebApplicationFactory<Program> _factory;
 
-        public RegistrationControllerTests(CustomWebApplicationFactory application)
+        public RegistrationControllerTests(CustomWebApplicationFactory factory)
         {
-            _client = application.CreateClient();
+            _factory = factory;
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace RegistrationApiTests
             {
                 FirstName = "Blaze",
                 Surname = "Fielding",
-                ReferenceNumber = "AB-123456789",
+                ReferenceNumber = "AB-123456",
                 EmailAddress = "bf@woodoak.ac.uk"
             };
 
@@ -102,11 +102,12 @@ namespace RegistrationApiTests
 
         private Task<HttpResponseMessage> PostRegistration(PolicyHolderRegistration policyHolderRegistration)
         {
+            var client = _factory.CreateClient();
             string requestJson = JsonConvert.SerializeObject(policyHolderRegistration);
             var content = new StringContent(requestJson);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            return _client.PostAsync("/registration", content);
+            return client.PostAsync("/registration", content);
         }
     }
 }
